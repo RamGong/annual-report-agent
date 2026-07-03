@@ -1,6 +1,5 @@
 // ===== 部署后请修改为你的后端接口地址 =====
-// 末尾必须加 /extract，和后端接口路径对应
-const BACKEND_URL = "shturl.cc/SF8peoqJsPdpjuEHPXP7V5X8EielLi9lrQvSQ68sURQXlLoo2gSv8";
+const BACKEND_URL = "https://annual-xtractor-itqfrlwsx.cn-hangzhou.fcapp.run/extract";
 
 const fileInput = document.getElementById('file-input');
 const selectBtn = document.getElementById('select-btn');
