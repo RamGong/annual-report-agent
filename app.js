@@ -67,30 +67,30 @@ extractBtn.addEventListener('click', async () => {
     formData.append('file', selectedFiles[0]);
 
     try {
-        const response = await fetch(BACKEND_URL, {
-            method: 'POST',
-            body: formData
-        });
+    // 关键修改：拼接 /extract 接口路径
+    const response = await fetch(`${BACKEND_URL}/extract`, {
+        method: 'POST',
+        body: formData
+    });
 
-        progressFill.style.width = '80%';
-        const result = await response.json();
+    progressFill.style.width = '80%';
+    const result = await response.json();
 
-        if (result.code === 0) {
-            extractResult = result.data;
-            renderResult(extractResult);
-            statusText.textContent = '处理完成！';
-            progressFill.style.width = '100%';
-            resultSection.classList.remove('hidden');
-        } else {
-            statusText.textContent = '处理失败：' + result.msg;
-        }
-    } catch (err) {
-        statusText.textContent = '请求失败，请检查后端地址是否正确';
-        console.error(err);
-    } finally {
-        extractBtn.disabled = false;
+    if (result.code === 0) {
+        extractResult = result.data;
+        renderResult(extractResult);
+        statusText.textContent = '处理完成！';
+        progressFill.style.width = '100%';
+        resultSection.classList.remove('hidden');
+    } else {
+        statusText.textContent = '处理失败：' + result.msg;
     }
-});
+} catch (err) {
+    statusText.textContent = '请求失败，请检查后端地址是否正确';
+    console.error(err);
+} finally {
+    extractBtn.disabled = false;
+}
 
 // 渲染结果
 function renderResult(data) {
