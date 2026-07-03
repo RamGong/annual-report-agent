@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>企业年报结构化提取智能体</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>企业年报结构化信息提取智能体</h1>
+            <p class="subtitle">基于阿里云通义千问大模型 · 批量提取资产负债表 / 管理层变动 / 财务附注</p>
+        </header>
+
+        <div class="upload-section">
+            <div id="upload-area" class="upload-area">
+                <p>拖拽年报PDF文件到此处，或点击选择文件</p>
+                <input type="file" id="file-input" accept=".pdf" multiple hidden>
+                <button id="select-btn" class="btn btn-primary">选择PDF文件</button>
+            </div>
+            <div class="file-list" id="file-list"></div>
+            <button id="extract-btn" class="btn btn-success" disabled>开始提取</button>
+        </div>
+
+        <div id="status-section" class="status-section hidden">
+            <p id="status-text">处理中，请稍候...</p>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <div id="result-section" class="result-section hidden">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="balance">资产负债表</button>
+                <button class="tab-btn" data-tab="management">管理层变动</button>
+                <button class="tab-btn" data-tab="notes">财务附注</button>
+            </div>
+
+            <div class="tab-content active" id="tab-balance">
+                <div class="table-container" id="balance-table"></div>
+            </div>
+            <div class="tab-content" id="tab-management">
+                <div class="table-container" id="management-table"></div>
+            </div>
+            <div class="tab-content" id="tab-notes">
+                <div id="notes-content"></div>
+            </div>
+
+            <button id="export-btn" class="btn btn-primary">导出Excel</button>
+        </div>
+    </div>
+
+    <!-- 引入SheetJS用于导出Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
