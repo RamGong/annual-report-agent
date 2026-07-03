@@ -1,4 +1,5 @@
 // ===== 部署后请修改为你的后端接口地址 =====
+// 正确，无后缀
 const BACKEND_URL = "https://annual-xtractor-itqfrlvwsx.cn-hangzhou.fcapp.run"
 
 const fileInput = document.getElementById('file-input');
