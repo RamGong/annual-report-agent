@@ -1,5 +1,5 @@
 // ===== 部署后请修改为你的后端接口地址 =====
-const BACKEND_URL = "https://annual-xtractor-itqfrlwsx.cn-hangzhou.fcapp.run"
+const BACKEND_URL = "https://annual-xtractor-itqfrlvwsx.cn-hangzhou.fcapp.run"
 
 const fileInput = document.getElementById('file-input');
 const selectBtn = document.getElementById('select-btn');
