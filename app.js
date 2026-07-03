@@ -1,5 +1,4 @@
 // ===== 部署后请修改为你的后端接口地址 =====
-// 正确，无后缀
 const BACKEND_URL = "https://annual-xtractor-itqfrlvwsx.cn-hangzhou.fcapp.run"
 
 const fileInput = document.getElementById('file-input');
@@ -16,10 +15,11 @@ const exportBtn = document.getElementById('export-btn');
 let selectedFiles = [];
 let extractResult = null;
 
-// 选择文件
+// 点击按钮唤起文件选择
 selectBtn.addEventListener('click', () => fileInput.click());
 uploadArea.addEventListener('click', () => fileInput.click());
 
+// 选中文件
 fileInput.addEventListener('change', (e) => {
     selectedFiles = Array.from(e.target.files);
     renderFileList();
@@ -30,11 +30,9 @@ uploadArea.addEventListener('dragover', (e) => {
     e.preventDefault();
     uploadArea.style.borderColor = '#3b82f6';
 });
-
 uploadArea.addEventListener('dragleave', () => {
     uploadArea.style.borderColor = '#cbd5e1';
 });
-
 uploadArea.addEventListener('drop', (e) => {
     e.preventDefault();
     uploadArea.style.borderColor = '#cbd5e1';
@@ -42,6 +40,7 @@ uploadArea.addEventListener('drop', (e) => {
     renderFileList();
 });
 
+// 渲染已选文件列表
 function renderFileList() {
     fileList.innerHTML = '';
     selectedFiles.forEach(file => {
@@ -53,7 +52,7 @@ function renderFileList() {
     extractBtn.disabled = selectedFiles.length === 0;
 }
 
-// 开始提取
+// 开始提取按钮逻辑
 extractBtn.addEventListener('click', async () => {
     if (selectedFiles.length === 0) return;
 
@@ -67,7 +66,6 @@ extractBtn.addEventListener('click', async () => {
     formData.append('file', selectedFiles[0]);
 
     try {
-        // 关键修改：拼接 /extract 接口路径
         const response = await fetch(`${BACKEND_URL}/extract`, {
             method: 'POST',
             body: formData
@@ -93,9 +91,9 @@ extractBtn.addEventListener('click', async () => {
     }
 });
 
-// 渲染结果
+// 渲染三大板块数据
 function renderResult(data) {
-    // 渲染资产负债表
+    // 资产负债表
     const balanceTable = document.getElementById('balance-table');
     let balanceHtml = '<table><tr><th>科目</th><th>期末余额</th><th>期初余额</th></tr>';
     data.balance_sheet.forEach(item => {
@@ -104,7 +102,7 @@ function renderResult(data) {
     balanceHtml += '</table>';
     balanceTable.innerHTML = balanceHtml;
 
-    // 渲染管理层变动
+    // 管理层变动
     const managementTable = document.getElementById('management-table');
     let mgmtHtml = '<table><tr><th>姓名</th><th>职位</th><th>变动类型</th><th>变动时间</th><th>变动原因</th></tr>';
     data.management_changes.forEach(item => {
@@ -113,7 +111,7 @@ function renderResult(data) {
     mgmtHtml += '</table>';
     managementTable.innerHTML = mgmtHtml;
 
-    // 渲染附注
+    // 财务附注
     const notesContent = document.getElementById('notes-content');
     let notesHtml = '';
     data.notes.forEach(item => {
@@ -126,29 +124,21 @@ function renderResult(data) {
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
         btn.classList.add('active');
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.remove('hidden');
     });
 });
 
 // 导出Excel
 exportBtn.addEventListener('click', () => {
     if (!extractResult) return;
-
     const wb = XLSX.utils.book_new();
-
-    // 资产负债表Sheet
     const ws1 = XLSX.utils.json_to_sheet(extractResult.balance_sheet);
     XLSX.utils.book_append_sheet(wb, ws1, "资产负债表");
-
-    // 管理层变动Sheet
     const ws2 = XLSX.utils.json_to_sheet(extractResult.management_changes);
     XLSX.utils.book_append_sheet(wb, ws2, "管理层变动");
-
-    // 附注Sheet
     const ws3 = XLSX.utils.json_to_sheet(extractResult.notes);
     XLSX.utils.book_append_sheet(wb, ws3, "财务附注");
-
     XLSX.writeFile(wb, "年报提取结果.xlsx");
 });
